@@ -1,0 +1,90 @@
+# We set Variables to cache python dependancies
+# https://pip.pypa.io/en/stable/reference/pip_install/#caching
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+
+# Set Image where to run the CI.
+default:
+  image: "docker.artifactory.michelin.com/rhel7-python:pyenv"
+  tags:
+    - k8s
+  interruptible: true
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+  before_script: # Pre-Requirements
+    - mkdir -p public
+    - echo "Use python version 3.8"
+    - pyenv versions
+    - pyenv latest local 3.8
+    - pip install -U pip
+    - pip install -U setuptools wheel anybadge
+    - python -m venv .venv
+    - source .venv/bin/activate
+    - pip install .[dev]
+
+
+#################################################################################################################
+### Stages
+#################################################################################################################
+stages:
+  - test
+#  - build
+#  - deploy
+
+test:
+  stage: test
+  script:
+    - pip list
+    - coverage run -m pytest
+    - coverage report
+    - coverage html
+    - coverage xml
+    - mv htmlcov/ ./public/htmlcov
+    - mv coverage.xml ./public/
+
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+    when: always
+    paths:
+      - public/
+  rules:
+      - allow_failure: false
+
+build:
+  stage: build
+  dependencies:
+    - test
+  script:
+    # We build the library
+    - python setup.py bdist_wheel sdist
+  artifacts:
+    when: always
+    paths:
+      - dist/
+  
+publish:
+  stage: deploy
+  dependencies:
+    - build
+  only:
+    - tags
+  script:
+    # We deploy
+    - pip install -U twine
+    - echo "Artifactory>URL..." $PIP_ARTIFACTORY_URL
+    - echo "Artifactory>UserName..." $PIP_ARTIFACTORY_USERNAME
+    - echo 'If the "twine upload" command below failed with a 403 status code, please check that the version is not already uploaded on artifactory (see versions of {{cookiecutter.repo_name}} above).'
+    - twine upload --repository-url "$PIP_ARTIFACTORY_URL" -u "$PIP_ARTIFACTORY_USERNAME" -p "$PIP_ARTIFACTORY_PASSWORD" dist/*
+
+
