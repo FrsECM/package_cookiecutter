@@ -84,7 +84,7 @@ publish:
     - pip install -U twine
     - echo "Artifactory>URL..." $PIP_ARTIFACTORY_URL
     - echo "Artifactory>UserName..." $PIP_ARTIFACTORY_USERNAME
-    - echo 'If the "twine upload" command below failed with a 403 status code, please check that the version is not already uploaded on artifactory (see versions of {{cookiecutter.repo_name}} above).'
+    - echo 'If the "twine upload" command below failed with a 403 status code, please check that the version is not already uploaded on artifactory above).'
     - twine upload --repository-url "$PIP_ARTIFACTORY_URL" -u "$PIP_ARTIFACTORY_USERNAME" -p "$PIP_ARTIFACTORY_PASSWORD" dist/*
 
 
