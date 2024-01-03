@@ -1,0 +1,9 @@
+versioneer
+
+{%- if cookiecutter.use_black == 'y' %}
+black
+{%- endif %}
+
+{%- if cookiecutter.use_black == 'y' %}
+pytest
+{%- endif %}

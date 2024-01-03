@@ -4,6 +4,7 @@
   "github_username": "FrsECM",
   "project_name": "My Library Name",
   "project_name_cleaned": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "project_env": "{{ cookiecutter.project_name.lower().replace(' ', '_').replace('-', '_') }}_env",
   "project_short_description": "My Library description...",
   "version": "0.1.0",
   "use_pytest": "n",
