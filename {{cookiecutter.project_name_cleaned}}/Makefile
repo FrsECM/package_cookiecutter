@@ -50,7 +50,7 @@ clean-test: ## remove test and coverage artifacts
 
 {%- if cookiecutter.use_black == 'y' %}
 lint: ## check style with black
-	black --check {{ cookiecutter.project_slug }} tests
+	black --check {{ cookiecutter.project_name_cleaned }} tests
 {%- endif %}
 
 {%- if cookiecutter.use_pytest == 'y' %}
@@ -60,7 +60,7 @@ test: ## run tests quickly with the default Python
 
 
 coverage: ## check code coverage quickly with the default Python
-	coverage run --source {{ cookiecutter.project_slug }} -m pytest
+	coverage run --source {{ cookiecutter.project_name_cleaned }} -m pytest
 	coverage report -m
 	coverage html
 	$(BROWSER) htmlcov/index.html
