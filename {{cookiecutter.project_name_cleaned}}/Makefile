@@ -1,3 +1,7 @@
+# MAKEFILE
+###########
+# The purpose of this file is to propose usefull command to be executed on the repository.
+#################################################################################
 .PHONY: clean clean-build clean-pyc clean-test
 		{%- if cookiecutter.use_pytest == 'y' %} coverage tests 
         {%- if cookiecutter.use_black == 'y' %} lint/black lint{% endif %}
