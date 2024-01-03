@@ -8,7 +8,7 @@ In this repository, we'll train a masked autoencoder based on transformers (ViT)
 conda create -n {{cookiecutter.project_env}} python=3.8
 conda activate {{cookiecutter.project_env}}
 pip install -r requirements.txt
+# Install the library in dev mode...
+pip install -e .
 ```
 
-
-# References
