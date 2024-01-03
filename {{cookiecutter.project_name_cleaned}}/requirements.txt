@@ -1,9 +1,9 @@
 versioneer
+setuptools
 
 {%- if cookiecutter.use_black == 'y' %}
-black
-{%- endif %}
-
+black{%- endif %}
 {%- if cookiecutter.use_black == 'y' %}
 pytest
-{%- endif %}
+pytest-cov
+pytest-html{%- endif %}
